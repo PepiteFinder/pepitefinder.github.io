@@ -1,0 +1,58 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			ul {
+				list-style-type: none;
+				padding: unset;
+			}
+			ul li {
+				display: flex;
+			}
+			ul li :global(time) {
+				flex: 0 0 130px;
+				font-style: italic;
+				color: #595959;
+			}
+			ul li a:visited {
+				color: #8e32dc;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<table>
+				<thead style="font-weight: bold;">
+					<td>Nom</td>
+					<td>Prix</td>
+					<td>CA</td>
+				</thead>
+					{
+						posts.map((post) => (
+							<tr style="font-size: 14px;">
+								<td><a href={post.data.link} target="_blank">{post.data.title}</a>&nbsp;</td>
+								<td>{post.data.price} €&nbsp;&nbsp;</td>
+								<td>{post.data.ca}&nbsp;</td> 
+							</tr>
+						))
+					}
+			</table>
+		</main>
+		<Footer />
+	</body>
+</html>
